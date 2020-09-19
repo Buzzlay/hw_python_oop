@@ -12,6 +12,12 @@ class Calculator:
         today_stats = [record.amount for record in self.records if record.date == dt.datetime.now().date()]
         total = sum(today_stats)
         return total
+    def get_week_stats(self):
+        today = dt.datetime.now().date()
+        seven_days_ago = today - dt.timedelta(days=7)
+        week_stats = [record.amount for record in self.records if record.date <= today and record.date > seven_days_ago]
+        total_week = sum(week_stats)
+        return total_week
     pass
 
 class Record:
@@ -26,28 +32,29 @@ class Record:
         self.comment = comment
     pass
 
-class cash_calc(Calculator):
-    def __init__(self,limit):
-        super().__init__(limit)
-        self.USD_RATE = 75.09
-        self.EURO_RATE = 89.29
+class CashCalculator(Calculator):
+    EURO_RATE = 70.00
+    USD_RATE = 60.00
+    currencies = {
+        'usd':{'rate':USD_RATE, 'name':'USD'},
+        'eur':{'rate':EURO_RATE, 'name':'Euro'},
+        'rub':{'rate':1,'name':'руб'}
+    }
     def get_today_cash_remained(self, currency):
-        currencies = {
-            'usd':[{'rate':self.USD_RATE, 'name':'USD'}], 'eur':[{'rate':self.EURO_RATE, 'name':'Euro'}], 'rub':[{'rate':1,'name':'руб'}]
-            }
         cash_remained = self.limit - self.get_today_stats()
-        if currency in currencies.keys():
-            rate = currencies[currency][0]['rate']
-            name_currency = currencies[currency][0]['name']
-            uni_cash = cash_remained/rate
-        if cash_remained > 0:
+        if currency in self.currencies.keys():
+            rate = self.currencies[currency]['rate']
+            name_currency = self.currencies[currency]['name']
+            uni_cash = round(cash_remained/rate,2)
+        if uni_cash > 0:
             return f'На сегодня осталось {uni_cash} {name_currency}'
-        elif cash_remained == 0:
+        elif uni_cash == 0:
             return 'Денег нет, держись'
         else:
-            return f'Денег нет, держись: твой долг - {abs(cash_remained)} {name_currency}'
+            debt=uni_cash*-1
+            return f'Денег нет, держись: твой долг - {debt} {name_currency}'
 
-class calories_calc(Calculator):
+class CaloriesCalculator(Calculator):
     def get_calories_remained(self):
         total_calories = self.get_today_stats()
         calories_remained = self.limit - total_calories
@@ -55,16 +62,18 @@ class calories_calc(Calculator):
             return f'Сегодня можно съесть что-нибудь ещё, но с общей калорийностью не более {calories_remained} кКал'
         else:
             return 'Хватит есть!'
-    def get_week_stats(self):
-        today = dt.datetime.now().date()
-        seven_days_ago = today - dt.timedelta(days=6)
-        week_stats = [record.amount for record in self.records if record.date <= today and record.date > seven_days_ago]
-        total = sum(week_stats)
-        return total
 
-cash_calculator = cash_calc(1000)
+cash_calculator = CashCalculator(2500)
 cash_calculator.add_record(Record(amount=145, comment='кофе'))
 cash_calculator.add_record(Record(amount=300, comment='Серёге за обед'))
 cash_calculator.add_record(Record(amount=3000, comment='бар в Танин др', date='08.11.2019'))
 
-print(cash_calculator.get_today_cash_remained('rub'))
+cash_calculator.add_record(Record(amount=500, comment=',бургер', date='19.09.2020'))
+cash_calculator.add_record(Record(amount=500, comment=',бургер', date='19.09.2020'))
+cash_calculator.add_record(Record(amount=500, comment=',бургер', date='19.09.2020'))
+cash_calculator.add_record(Record(amount=500, comment=',бургер', date='19.09.2020'))
+cash_calculator.add_record(Record(amount=500, comment=',бургер', date='19.09.2020'))
+cash_calculator.add_record(Record(amount=500, comment=',бургер', date='14.09.2020'))
+cash_calculator.add_record(Record(amount=500, comment=',бургер', date='13.09.2020'))
+
+print(cash_calculator.get_today_cash_remained('usd'))
