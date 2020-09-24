@@ -24,7 +24,6 @@ class Calculator:
                       if record.date <= today and record.date > seven_days_ago]
         total_week = sum(week_stats)
         return total_week
-    pass
 
 
 class Record:
@@ -39,7 +38,6 @@ class Record:
                                               date_format)
             self.date = date_right.date()
         self.comment = comment
-    pass
 
 
 class CashCalculator(Calculator):
@@ -78,33 +76,3 @@ class CaloriesCalculator(Calculator):
             return string_calories
         else:
             return 'Хватит есть!'
-
-
-cash_calculator = CashCalculator(2500)
-cash_calculator.add_record(Record(amount=145, comment='кофе'))
-cash_calculator.add_record(Record(amount=300, comment='Серёге за обед'))
-cash_calculator.add_record(Record(amount=3000,
-                                  comment='бар в Танин др',
-                                  date='08.11.2019'))
-cash_calculator.add_record(Record(amount=500,
-                                  comment=',бургер',
-                                  date='19.09.2020'))
-cash_calculator.add_record(Record(amount=500,
-                                  comment=',бургер',
-                                  date='19.09.2020'))
-cash_calculator.add_record(Record(amount=500,
-                                  comment=',бургер',
-                                  date='19.09.2020'))
-cash_calculator.add_record(Record(amount=500,
-                                  comment=',бургер',
-                                  date='19.09.2020'))
-cash_calculator.add_record(Record(amount=500,
-                                  comment=',бургер',
-                                  date='19.09.2020'))
-cash_calculator.add_record(Record(amount=500,
-                                  comment=',бургер',
-                                  date='14.09.2020'))
-cash_calculator.add_record(Record(amount=500,
-                                  comment=',бургер',
-                                  date='13.09.2020'))
-print(cash_calculator.get_today_cash_remained('usd'))
