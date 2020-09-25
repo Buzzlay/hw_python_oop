@@ -55,13 +55,15 @@ class CashCalculator(Calculator):
             rate = self.currencies[currency]['rate']
             name_currency = self.currencies[currency]['name']
             uni_cash = round(cash_remained/rate, 2)
-        if uni_cash > 0:
-            return f'На сегодня осталось {uni_cash} {name_currency}'
-        elif uni_cash == 0:
-            return 'Денег нет, держись'
+            if uni_cash > 0:
+                return f'На сегодня осталось {uni_cash} {name_currency}'
+            elif uni_cash == 0:
+                return 'Денег нет, держись'
+            else:
+                debt = -uni_cash
+                return f'Денег нет, держись: твой долг - {debt} {name_currency}'
         else:
-            debt = uni_cash*-1
-            return f'Денег нет, держись: твой долг - {debt} {name_currency}'
+            return f"введите название валюты (eur, rub, usd)"
 
 
 class CaloriesCalculator(Calculator):
